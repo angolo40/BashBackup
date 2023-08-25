@@ -1,0 +1,47 @@
+#!/bin/bash
+
+# Backup Type (1=Local to Remote, 2=Remote to Local, 3=Local to Local)
+B_TYPE=1
+
+# This server name
+SERVERNAME="NAME"
+
+# Folders to save
+SOURCE_DIRS=("/etc/wireguard" "/home" "/root")
+
+# Exclude Folder
+EXCLUDE_DIR="{'/dev/*','/proc/*','/sys/*','/tmp/*','/run/*','/mnt/*','/media/*','/lost+found'}"
+
+# Backup destination
+BACKUP_DIR="/share/Backup/NAME"
+
+# If source or destination is remote, define SSH connection info
+SSH_USER="admin"
+SSH_HOST="10.0.10.20"
+SSH_PRIVATE_KEY=/root/.ssh/NAME
+
+############################# Define retention
+#How many Daily backup to keep
+R_DAILY=3
+#How many Weekly backup to keep
+R_WEEKLY=4
+#How many Monthly backup to keep
+R_MONTHLY=12
+#How many Yearly backup to keep
+R_YEARLY=10
+# Retention Policy (1=.tar compress and delete oldest backup after max retention, 2=Delete oldest backup only after max retention)
+R_TYPE=1
+
+# Define weekly backup day/s
+B_WEEKDAY=("1") #(Every 1=Monday...7=Sunday)
+
+# Define monthly backup day/s
+B_MONTH=("01" "02" "03" "04" "05" "06" "07" "08" "09" "10" "11" "12") #(Every 01=Gennaio...12=December, All numbers is everymonth)
+B_MONTHDAY=("01") #(01 - 31 Day of month)
+
+#########################
+###### EMAIL SETTINGS ###
+#########################
+
+DEST_EMAIL=to@email.com
+FROM_EMAIL=from@email.com
