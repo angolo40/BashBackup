@@ -138,7 +138,7 @@ echo " "
                     if echo "${B_WEEKDAY[@]}" | grep -qw "$WEEKDAY"; then
                         echo -e "${RED} $freq backup of folder: $dir ${ENDCOLOR}"
                     else
-                        echo "No weekly backup needed for $dir"
+                        echo "No $freq backup needed for $dir"
                         continue
                     fi
                     ;;
@@ -148,21 +148,32 @@ echo " "
                         if echo "${B_MONTHDAY[@]}" | grep -qw "$MONTHDAY"; then
                             echo -e "${RED} $freq backup of folder: $dir ${ENDCOLOR}"
                         else
-                            echo "No monthly backup needed for $dir"
+                            echo "No $freq backup needed for $dir"
                             continue
                         fi
                     else
-                        echo "No monthly backup needed for $dir"
+                        echo "No $freq backup needed for $dir"
                         continue
                     fi
                     ;;
 
                 "yearly" )
-                    if [[ $YEAR != "01" ]]; then
-                      echo "No yearly backup needed for $dir"
-                      continue
+                    if echo "${B_YEAR[@]}" | grep -qw "$YEAR"; then
+                      if echo "${B_MONTH[@]}" | grep -qw "$MONTH"; then
+                        if echo "${B_MONTHDAY[@]}" | grep -qw "$MONTHDAY"; then
+                            echo -e "${RED} $freq backup of folder: $dir ${ENDCOLOR}"
+                        else
+                          echo "No $freq backup needed for $dir"
+                          continue
+                        fi
+                      else
+                          echo "No $freq backup needed for $dir"
+                          continue
+                      fi
+                    else
+                        echo "No $freq backup needed for $dir"
+                        continue
                     fi
-                    echo -e "${RED} $freq backup of folder: $dir ${ENDCOLOR}"
                     ;;
 
                 esac
@@ -173,7 +184,6 @@ echo " "
                 echo " "
                 echo -e "${RED}End Backup Process: $TODAY - Weekday: $WEEKDAY ${ENDCOLOR}"
                 echo " "
-
 
         done
     done
