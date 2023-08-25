@@ -1,5 +1,16 @@
 #!/bin/bash
 
+#===============================================================
+# Initial checks
+#===============================================================
+
+# rsync must be installed
+if [ -z "$(which rsync)" ]; then
+    echo "Error: rsync is not installed"
+    read -p "Press Enter to exit..."
+    exit 1
+fi
+
 # Leggi le variabili dal file .config
 SCRIPT_DIR=$( cd -- "$( dirname -- "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )
 source $SCRIPT_DIR/backup.config
@@ -24,13 +35,14 @@ function start_backup() {
 
   case $B_TYPE in
     1)
+      ssh -i "$SSH_PRIVATE_KEY" "$SSH_USER@$SSH_HOST" mkdir -p "$freq_backup_dir"
       last_backup=$(ssh -i "$SSH_PRIVATE_KEY" "$SSH_USER@$SSH_HOST" "ls -td $BACKUP_DIR/$freq/* | head -n 1")
       prev_backup=$(ssh -i "$SSH_PRIVATE_KEY" "$SSH_USER@$SSH_HOST" "ls -trd $BACKUP_DIR/$freq/* | tail -2 | head -n 1")
       oldest_backup=$(ssh -i "$SSH_PRIVATE_KEY" "$SSH_USER@$SSH_HOST" "ls -trd $BACKUP_DIR/$freq/* | head -n 1")
       count=$(ssh -i "$SSH_PRIVATE_KEY" "$SSH_USER@$SSH_HOST" "ls -l $BACKUP_DIR/$freq | grep '^d' | wc -l")
-      ssh -i "$SSH_PRIVATE_KEY" "$SSH_USER@$SSH_HOST" mkdir -p "$freq_backup_dir"
       ;;
     2|3)
+      mkdir -p "$freq_backup_dir"
       last_backup=$("ls -td $BACKUP_DIR/$freq/* | head -n 1")
       prev_backup=$("ls -trd $BACKUP_DIR/$freq/* | tail -2 | head -n 1")
       oldest_backup=$("ls -trd $BACKUP_DIR/$freq/* | head -n 1")
