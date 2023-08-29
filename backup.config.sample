@@ -19,6 +19,7 @@ BACKUP_DIR="/share/Backup/NAME"
 SSH_USER="admin"
 SSH_HOST="10.0.10.20"
 SSH_PRIVATE_KEY=/root/.ssh/NAME
+USE_REMOTE_SUDO="Y" #N
 
 ############################# Define retention
 #How many Daily backup to keep

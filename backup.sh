@@ -62,12 +62,16 @@ function start_backup() {
     do
       case $B_TYPE in
         1)
-          # Effettua il backup delle cartelle specificate utilizzando rsync verso un server remoto attraverso SSH
+          # rsync local to remote via SSH
           rsync -avz --timeout=60 --partial --progress --link-dest="$prev_backup/$(basename "$dir")" --exclude=$EXCLUDE_DIR --log-file=$freq_log_file -e "ssh -i $SSH_PRIVATE_KEY" "$dir/" "$SSH_USER@$SSH_HOST:$freq_backup_dir/$(basename "$dir")"
           ;;
         2)
-          # Effettua il backup delle cartelle specificate utilizzando rsync prendendo i file di un server remoto e copiando in locale attraverso SSH
-          rsync -avz --timeout=60 --partial --progress --link-dest="$prev_backup/$(basename "$dir")" --exclude=$EXCLUDE_DIR --log-file=$freq_log_file -e "ssh -i $SSH_PRIVATE_KEY" "$SSH_USER@$SSH_HOST:$dir/" "$freq_backup_dir/$(basename "$dir")"
+          # rsync remote to local via SSH
+          if [ $USE_REMOTE_SUDO == "Y"  ]; then
+            rsync -avz --timeout=60 --partial --progress --link-dest="$prev_backup/$(basename "$dir")" --exclude=$EXCLUDE_DIR --rsync-path="sudo rsync" --log-file=$freq_log_file -e "ssh -i $SSH_PRIVATE_KEY" "$SSH_USER@$SSH_HOST:$dir/" "$freq_backup_dir/$(basename "$dir")"
+          else
+            rsync -avz --timeout=60 --partial --progress --link-dest="$prev_backup/$(basename "$dir")" --exclude=$EXCLUDE_DIR --log-file=$freq_log_file -e "ssh -i $SSH_PRIVATE_KEY" "$SSH_USER@$SSH_HOST:$dir/" "$freq_backup_dir/$(basename "$dir")"
+          fi
           ;;
         3)
           # Effettua il backup delle cartelle specificate utilizzando rsync prendendo i file di un server remoto e copiando in locale attraverso SSH
