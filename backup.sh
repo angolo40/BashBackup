@@ -37,16 +37,16 @@ function start_backup() {
   case $B_TYPE in
     1)
       ssh -i "$SSH_PRIVATE_KEY" "$SSH_USER@$SSH_HOST" mkdir -p "$freq_backup_dir"
-      last_backup=$(ssh -i "$SSH_PRIVATE_KEY" "$SSH_USER@$SSH_HOST" "ls -td $BACKUP_DIR/$freq/* | head -n 1")
-      prev_backup=$(ssh -i "$SSH_PRIVATE_KEY" "$SSH_USER@$SSH_HOST" "ls -trd $BACKUP_DIR/$freq/* | tail -2 | head -n 1")
-      oldest_backup=$(ssh -i "$SSH_PRIVATE_KEY" "$SSH_USER@$SSH_HOST" "ls -trd $BACKUP_DIR/$freq/* | head -n 1")
+      last_backup=$(ssh -i "$SSH_PRIVATE_KEY" "$SSH_USER@$SSH_HOST" "ls -d $BACKUP_DIR/$freq/* | tail -n1 | head -n 1")
+      prev_backup=$(ssh -i "$SSH_PRIVATE_KEY" "$SSH_USER@$SSH_HOST" "ls -d $BACKUP_DIR/$freq/* | tail -n2 | head -n 1")
+      oldest_backup=$(ssh -i "$SSH_PRIVATE_KEY" "$SSH_USER@$SSH_HOST" "ls -td $BACKUP_DIR/$freq/* | tail -n2 | head -n 1")
       count=$(ssh -i "$SSH_PRIVATE_KEY" "$SSH_USER@$SSH_HOST" "ls -l $BACKUP_DIR/$freq | grep '^d' | wc -l")
       ;;
     2|3)
       mkdir -p "$freq_backup_dir"
-      last_backup=$("ls -td $BACKUP_DIR/$freq/* | head -n 1")
-      prev_backup=$("ls -trd $BACKUP_DIR/$freq/* | tail -2 | head -n 1")
-      oldest_backup=$("ls -trd $BACKUP_DIR/$freq/* | head -n 1")
+      last_backup=$("ls -d $BACKUP_DIR/$freq/* | tail -n1 | head -n 1")
+      prev_backup=$("ls -d $BACKUP_DIR/$freq/* | tail -n2 | head -n 1")
+      oldest_backup=$("ls -td $BACKUP_DIR/$freq/* | tail -n2 | head -n 1")
       count=$("ls -l $BACKUP_DIR/$freq | grep '^d' | wc -l")
       mkdir -p "$freq_backup_dir"
       ;;
@@ -80,10 +80,10 @@ function start_backup() {
         esac
 
       if [ "$?" = "0" ] ; then
-        echo "Rsync completed normally"
+        echo "Rsync completed"
         # Invia una mail con il risultato del backup
-        #echo "Message Body Here" | mutt -s "$freq_mail_subject" -a $freq_log_file $DEST_EMAIL
-        mail -s "Backup [SUCCESS] [$SERVERNAME] [$freq] [$dir]" -a "From: $FROM_EMAIL" $DEST_EMAIL < $freq_log_file
+        BACKUP_STATUS="SUCCESS"
+        mail -s $EMAIL_SUB -a "From: $FROM_EMAIL" $DEST_EMAIL < $freq_log_file
         rm -rf $freq_log_file
         break
       else
