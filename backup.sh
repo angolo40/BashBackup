@@ -12,8 +12,9 @@ if [ -z "$(which rsync)" ]; then
 fi
 
 # Leggi le variabili dal file .config
+config=$1
 SCRIPT_DIR=$( cd -- "$( dirname -- "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )
-source $SCRIPT_DIR/backup.config
+source $SCRIPT_DIR/$1
 
 RED="\e[31m"
 GREEN="\e[32m"
