@@ -10,7 +10,7 @@ SERVERNAME="NAME"
 SOURCE_DIRS=("/etc/wireguard" "/home" "/root")
 
 # Exclude Folder
-EXCLUDE_DIR="{'/dev/*','/proc/*','/sys/*','/tmp/*','/run/*','/mnt/*','/media/*','/lost+found'}"
+EXCLUDE_DIR=( --exclude={'dev','proc','sys','tmp','run','mnt','media','lost+found'} )
 
 # Backup destination
 BACKUP_DIR="/share/Backup/NAME"
