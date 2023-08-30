@@ -63,19 +63,19 @@ function start_backup() {
       case $B_TYPE in
         1)
           # rsync local to remote via SSH
-          rsync -avz --timeout=60 --partial --progress --link-dest="$prev_backup/$(basename "$dir")" --exclude=$EXCLUDE_DIR --log-file=$freq_log_file -e "ssh -i $SSH_PRIVATE_KEY" "$dir/" "$SSH_USER@$SSH_HOST:$freq_backup_dir/$(basename "$dir")"
+          rsync -avz --timeout=60 --partial --progress --link-dest="$prev_backup/$(basename "$dir")" "${EXCLUDE_DIR[@]}" --log-file=$freq_log_file -e "ssh -i $SSH_PRIVATE_KEY" "$dir/" "$SSH_USER@$SSH_HOST:$freq_backup_dir/$(basename "$dir")"
           ;;
         2)
           # rsync remote to local via SSH
           if [ $USE_REMOTE_SUDO == "Y"  ]; then
-            rsync -avz --timeout=60 --partial --progress --link-dest="$prev_backup/$(basename "$dir")" --exclude=$EXCLUDE_DIR --rsync-path="sudo rsync" --log-file=$freq_log_file -e "ssh -i $SSH_PRIVATE_KEY" "$SSH_USER@$SSH_HOST:$dir/" "$freq_backup_dir/$(basename "$dir")"
+            rsync -avz --timeout=60 --partial --progress --link-dest="$prev_backup/$(basename "$dir")" "${EXCLUDE_DIR[@]}" --rsync-path="sudo rsync" --log-file=$freq_log_file -e "ssh -i $SSH_PRIVATE_KEY" "$SSH_USER@$SSH_HOST:$dir/" "$freq_backup_dir/$(basename "$dir")"
           else
-            rsync -avz --timeout=60 --partial --progress --link-dest="$prev_backup/$(basename "$dir")" --exclude=$EXCLUDE_DIR --log-file=$freq_log_file -e "ssh -i $SSH_PRIVATE_KEY" "$SSH_USER@$SSH_HOST:$dir/" "$freq_backup_dir/$(basename "$dir")"
+            rsync -avz --timeout=60 --partial --progress --link-dest="$prev_backup/$(basename "$dir")" "${EXCLUDE_DIR[@]}" --log-file=$freq_log_file -e "ssh -i $SSH_PRIVATE_KEY" "$SSH_USER@$SSH_HOST:$dir/" "$freq_backup_dir/$(basename "$dir")"
           fi
           ;;
         3)
           # Effettua il backup delle cartelle specificate utilizzando rsync prendendo i file di un server remoto e copiando in locale attraverso SSH
-          rsync -avz --timeout=60 --partial --progress --link-dest="$prev_backup/$(basename "$dir")" --exclude=$EXCLUDE_DIR --log-file=$freq_log_file "$dir/" "$freq_backup_dir/$(basename "$dir")"
+          rsync -avz --timeout=60 --partial --progress --link-dest="$prev_backup/$(basename "$dir")" "${EXCLUDE_DIR[@]}" --log-file=$freq_log_file "$dir/" "$freq_backup_dir/$(basename "$dir")"
           ;;
         esac
 
@@ -83,7 +83,7 @@ function start_backup() {
         echo "Rsync completed"
         # Invia una mail con il risultato del backup
         BACKUP_STATUS="SUCCESS"
-        mail -s $EMAIL_SUB -a "From: $FROM_EMAIL" $DEST_EMAIL < $freq_log_file
+        mail -s '$EMAIL_SUB' -a "From: $FROM_EMAIL" $DEST_EMAIL < $freq_log_file
         rm -rf $freq_log_file
         break
       else
