@@ -39,14 +39,14 @@ function start_backup() {
       ssh -i "$SSH_PRIVATE_KEY" "$SSH_USER@$SSH_HOST" mkdir -p "$freq_backup_dir"
       last_backup=$(ssh -i "$SSH_PRIVATE_KEY" "$SSH_USER@$SSH_HOST" "ls -d $BACKUP_DIR/$freq/* | tail -n1 | head -n 1")
       prev_backup=$(ssh -i "$SSH_PRIVATE_KEY" "$SSH_USER@$SSH_HOST" "ls -d $BACKUP_DIR/$freq/* | tail -n2 | head -n 1")
-      oldest_backup=$(ssh -i "$SSH_PRIVATE_KEY" "$SSH_USER@$SSH_HOST" "ls -td $BACKUP_DIR/$freq/* | tail -n2 | head -n 1")
+      oldest_backup=$(ssh -i "$SSH_PRIVATE_KEY" "$SSH_USER@$SSH_HOST" "find $BACKUP_DIR/$freq/* -type d | head -n 1")
       count=$(ssh -i "$SSH_PRIVATE_KEY" "$SSH_USER@$SSH_HOST" "ls -l $BACKUP_DIR/$freq | grep '^d' | wc -l")
       ;;
     2|3)
       mkdir -p "$freq_backup_dir"
       last_backup=$("ls -d $BACKUP_DIR/$freq/* | tail -n1 | head -n 1")
       prev_backup=$("ls -d $BACKUP_DIR/$freq/* | tail -n2 | head -n 1")
-      oldest_backup=$("ls -td $BACKUP_DIR/$freq/* | tail -n2 | head -n 1")
+      oldest_backup=$("find $BACKUP_DIR/$freq/* -type d | head -n 1")
       count=$("ls -l $BACKUP_DIR/$freq | grep '^d' | wc -l")
       mkdir -p "$freq_backup_dir"
       ;;
