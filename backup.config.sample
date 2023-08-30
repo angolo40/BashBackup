@@ -14,6 +14,7 @@ EXCLUDE_DIR=( --exclude={'dev','proc','sys','tmp','run','mnt','media','lost+foun
 
 # Backup destination
 BACKUP_DIR="/share/Backup/NAME"
+RELATIVE_PATH="Y" #N
 
 # If source or destination is remote, define SSH connection info
 SSH_USER="admin"
@@ -32,6 +33,7 @@ R_MONTHLY=12
 R_YEARLY=10
 # Retention Policy (1=.tar compress and delete oldest backup after max retention, 2=Delete oldest backup only after max retention)
 R_TYPE=1
+R_COMPRESSION=1 #(if R_TYPE=1 then 1=.tar 2=.tar.gz)
 
 # Define weekly backup day/s
 B_WEEKDAY=("1") #(Every 1=Monday...7=Sunday)

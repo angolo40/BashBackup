@@ -83,7 +83,7 @@ function start_backup() {
         echo "Rsync completed"
         # Invia una mail con il risultato del backup
         BACKUP_STATUS="SUCCESS"
-        mail -s '$EMAIL_SUB' -a "From: $FROM_EMAIL" $DEST_EMAIL < $freq_log_file
+        mail -s $EMAIL_SUB -a "From: $FROM_EMAIL" $DEST_EMAIL < $freq_log_file
         rm -rf $freq_log_file
         break
       else
@@ -121,7 +121,12 @@ function clean_backup() {
         case $R_TYPE in
           1)
             # Comprimi la cartella di backup
-            tar -cvf "$oldest_backup.tar" "$oldest_backup"
+            case $R_COMPRESSION in
+              1)
+                tar -cvf "$oldest_backup.tar" "$oldest_backup" ;;
+              2)
+                tar -czvf "$oldest_backup.tar.gz" "$oldest_backup"
+            esac
             # Rimuovi la cartella non compressa
             rm -rf "$oldest_backup"
             ;;
