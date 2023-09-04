@@ -83,7 +83,7 @@ function start_backup() {
         echo "Rsync completed"
         # Invia una mail con il risultato del backup
         BACKUP_STATUS="SUCCESS"
-        mail -s $EMAIL_SUB -a "From: $FROM_EMAIL" $DEST_EMAIL < $freq_log_file
+        mail -s [${SERVERNAME}][${freq}][${BACKUP_STATUS}][${dir}] -a "From: $FROM_EMAIL" $DEST_EMAIL < $freq_log_file
         rm -rf $freq_log_file
         break
       else
