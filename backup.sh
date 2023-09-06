@@ -44,10 +44,10 @@ function start_backup() {
       ;;
     2|3)
       mkdir -p "$freq_backup_dir"
-      last_backup=$("ls -d $BACKUP_DIR/$freq/* | tail -n1 | head -n 1")
-      prev_backup=$("ls -d $BACKUP_DIR/$freq/* | tail -n2 | head -n 1")
-      oldest_backup=$("find $BACKUP_DIR/$freq/* -type d | head -n 1")
-      count=$("ls -l $BACKUP_DIR/$freq | grep '^d' | wc -l")
+      last_backup=$(ls -d $BACKUP_DIR/$freq/* | tail -n1 | head -n 1)
+      prev_backup=$(ls -d $BACKUP_DIR/$freq/* | tail -n2 | head -n 1)
+      oldest_backup=$(find $BACKUP_DIR/$freq/* -type d | head -n 1)
+      count=$(ls -l $BACKUP_DIR/$freq | grep '^d' | wc -l)
       mkdir -p "$freq_backup_dir"
       ;;
     esac
