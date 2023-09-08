@@ -11,11 +11,6 @@ if [ -z "$(which rsync)" ]; then
     exit 1
 fi
 
-# Leggi le variabili dal file .config
-config=$1
-SCRIPT_DIR=$( cd -- "$( dirname -- "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )
-source $SCRIPT_DIR/$1
-
 RED="\e[31m"
 GREEN="\e[32m"
 YELLOW="\e[33m"
@@ -28,6 +23,11 @@ WEEKDAY=$(date +%u)
 MONTH=$(date +%m)
 MONTHDAY=$(date +%d)
 YEAR=$(date +%Y)
+
+# Leggi le variabili dal file .config
+config=$1
+SCRIPT_DIR=$( cd -- "$( dirname -- "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )
+source $SCRIPT_DIR/$1
 
 function start_backup() {
 
@@ -83,7 +83,7 @@ function start_backup() {
         echo "Rsync completed"
         # Invia una mail con il risultato del backup
         BACKUP_STATUS="SUCCESS"
-        mail -s [${SERVERNAME}][${freq}][${BACKUP_STATUS}][${dir}] -a "From: $FROM_EMAIL" $DEST_EMAIL < $freq_log_file
+        mail -s "${EMAIL_SUB}" -a "From: $FROM_EMAIL" $DEST_EMAIL < $freq_log_file
         rm -rf $freq_log_file
         break
       else

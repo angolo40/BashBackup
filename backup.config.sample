@@ -48,3 +48,4 @@ B_MONTHDAY=("01") #(01 - 31 Day of month)
 
 DEST_EMAIL=to@email.com
 FROM_EMAIL=from@email.com
+EMAIL_SUB="[$SERVERNAME][$TODAY][Success][$SOURCE_DIRS]"
